@@ -10,10 +10,10 @@ public abstract class Cell {
     int nrOfEat=0;
 
     public abstract void Live();
-    public abstract void Starve();
+    protected abstract void Starve();
     public abstract void Divide();
-    public abstract boolean CanDivide();
-    public void Die()
+    protected abstract boolean CanDivide();
+    protected void Die()
     {
         Eat();
         if(timeToDie==0)
@@ -24,7 +24,7 @@ public abstract class Cell {
             timeToDie=5;
         }
     }
-    public void Eat()
+    protected void Eat()
     {
         if(canEat())
         {
