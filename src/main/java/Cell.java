@@ -3,6 +3,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class Cell {
     static AtomicInteger nr= new AtomicInteger(0);
     String id;
+    cellState state = cellState.Ok;
     final int T_full=5;
     final int T_starve=2;//Program.random.nextInt(1,6);
     int timeToHungry=T_full;
@@ -23,6 +24,7 @@ public abstract class Cell {
             timeToHungry=5;
             timeToDie=5;
         }
+        state=cellState.Dead;
     }
     protected void Eat()
     {
@@ -31,6 +33,7 @@ public abstract class Cell {
             nrOfEat++;
             timeToHungry=T_full;
             timeToDie=timeToHungry+T_starve;
+            state=cellState.Ok;
         }
     }
     private boolean canEat()
@@ -46,4 +49,10 @@ public abstract class Cell {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "#" + id + " is " + state +
+                ", already eat " + nrOfEat + "times}";
+    }
 }
