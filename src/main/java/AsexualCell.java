@@ -6,6 +6,11 @@ public class AsexualCell extends Cell{
     }
 
     @Override
+    public void Live() {
+
+    }
+
+    @Override
     public void Starve() {
 
     }
@@ -17,6 +22,10 @@ public class AsexualCell extends Cell{
 
     @Override
     public boolean CanDivide() {
+        if (nrOfEat>=10)
+        {
+            return true;
+        }
         return false;
     }
 }
