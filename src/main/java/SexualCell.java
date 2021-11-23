@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.ArrayList;
 
 public class SexualCell extends Cell{
@@ -8,11 +9,28 @@ public class SexualCell extends Cell{
         state=cellState.Hungry;
     }
 
+    public SexualCell(String parent)
+    {
+        id="S"+nr.incrementAndGet();
+        state=cellState.Hungry;
+    }
+
+    public String getId()
+    {
+        return id;
+    }
+
     @Override
-    public void Divide() {
+    public synchronized void Divide() {
         if (CanDivide())
         {
-            //TODO make dividing - send sign for a sexual cell who wants to divide
+            notify();
+            Divided();
+            SexualCell babyCell = new SexualCell();
+            Program.cells.add(babyCell);
+            Thread babyThread = new Thread(){public void run(){ babyCell.Live(); } };
+            Program.threadList.add(babyThread);
+            babyThread.start();
         }
         else
         {
@@ -26,27 +44,32 @@ public class SexualCell extends Cell{
             }
             if(b)
             {
-                //TODO wait for sign
+                Program.sCellToDivide.add(this);
+                try {
+                    wait();
+                    Divided();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             else
             {
                 state=cellState.Ok;
             }
-            Program.sCellToDivide.add(this);
+
         }
+    }
+
+    private void Divided()
+    {
+        Program.sCellToDivide.remove(this);
+        nrOfEat=0;
+        state=cellState.Ok;
     }
 
     @Override
     public boolean CanDivide() {
-        boolean b=false;
-        if (Program.sCellToDivide.isEmpty())
-        {
-            //TODO choose a cell and check if this is in the ArrayList
-        }
-        else
-        {
-            b=true;
-        }
-        return ((nrOfEat>=10)&& b);
+        Program.sCellToDivide.remove(this); //try if contains
+        return ((nrOfEat>=10)&& !Program.sCellToDivide.isEmpty());
     }
 }
