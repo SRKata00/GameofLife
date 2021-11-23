@@ -1,5 +1,3 @@
-import org.hsqldb.lib.StopWatch;
-
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
@@ -8,7 +6,7 @@ public class Program {
     static ThreadLocalRandom random;
     static int nutritions=10;
     static Object nutritionLock = new Object();
-    static StopWatch stopWatch = new StopWatch();
+    static long startTime = System.currentTimeMillis();
     static ConcurrentLinkedQueue<Cell> cells;
     static ConcurrentLinkedQueue<Cell> sCellToDivide;
     static ArrayList<Thread> threadList;
@@ -31,8 +29,8 @@ public class Program {
             boolean needed=true;
             while(needed)
             {
-                stopWatch.start();
-                write("Time: "+stopWatch.elapsedTime(),true);
+                long time = System.currentTimeMillis()-startTime;
+                write("Time: "+time,true);
                 write("\nCells",false);
                 for (Cell c: cells){write(c.toString()+"                         ",false);}
                 try {
@@ -53,7 +51,7 @@ public class Program {
             t.start();
         }
         consWriterThread.start();
-        stopWatch.stop();
+        //stopWatch.stop();
     }
 
     public static synchronized void write(String text, boolean b)

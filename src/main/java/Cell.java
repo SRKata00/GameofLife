@@ -94,8 +94,7 @@ public abstract class Cell {
 
     @Override
     public String toString() {
-        return "Cell{" +
-                "#" + id + " is " + state +
-                ", already eat " + nrOfEat + "times}";
+        return "#" + id + " is " + state +
+                ", already eat " + nrOfEat + " times.";
     }
 }
