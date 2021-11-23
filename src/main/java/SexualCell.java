@@ -3,17 +3,7 @@ public class SexualCell extends Cell{
     public SexualCell()
     {
         id="S"+nr.incrementAndGet();
-        timeToHungry=0;
-    }
-
-    @Override
-    public void Live() {
-
-    }
-
-    @Override
-    public void Starve() {
-
+        state=cellState.Hungry;
     }
 
     @Override

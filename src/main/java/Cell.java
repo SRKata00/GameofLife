@@ -1,40 +1,83 @@
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.Thread.sleep;
+
+@SuppressWarnings("BusyWait")
 public abstract class Cell {
     static AtomicInteger nr= new AtomicInteger(0);
     String id;
     cellState state = cellState.Ok;
     final int T_full=5;
-    final int T_starve=2;//Program.random.nextInt(1,6);
-    int timeToHungry=T_full;
-    int timeToDie=timeToHungry+T_starve;
+    final int T_starve=2;
+    //int timeToHungry=T_full;
+    //int timeToDie=timeToHungry+T_starve;
     int nrOfEat=0;
 
-    public abstract void Live();
-    protected abstract void Starve();
-    public abstract void Divide();
-    protected abstract boolean CanDivide();
+    protected abstract void Divide();
+    protected boolean CanDivide(){
+        return nrOfEat >= 10;
+    }
+    public void Live()
+    {
+        while (state!=cellState.Dead)
+        {
+            switch (state)
+            {
+                case Ok -> {
+                    try {
+                        sleep(T_full*1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+                case Hungry -> {
+                    int t=T_starve;
+                    while ((state==cellState.Hungry)&&(t>0))
+                    {
+                        Starve();
+                        try {
+                            sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        t--;
+                    }
+                    if(t==0)
+                    {
+                        Die();
+                        nrOfEat=-1;
+                    }
+                    break;
+                }
+                case wantDivide -> {
+                    Divide();
+                    break;
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + state);
+            }
+        }
+    }
     protected void Die()
     {
-        Eat();
-        if(timeToDie==0)
-        {
-            nrOfEat++;
-            //TODO set times
-            timeToHungry=5;
-            timeToDie=5;
-        }
         state=cellState.Dead;
+        int food = Program.random.nextInt(1,6);
+        synchronized (Program.nutritionLock)
+        {
+            Program.nutritions+=food;
+        }
     }
-    protected void Eat()
+    protected void Starve()
     {
         if(canEat())
         {
             nrOfEat++;
-            timeToHungry=T_full;
-            timeToDie=timeToHungry+T_starve;
+            //timeToHungry=T_full;
+            //timeToDie=timeToHungry+T_starve;
             state=cellState.Ok;
         }
+        if (nrOfEat==10)
+            state=cellState.wantDivide;
     }
     private boolean canEat()
     {

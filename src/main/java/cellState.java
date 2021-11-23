@@ -1,6 +1,6 @@
 public enum cellState {
     Ok,
     Hungry,
-    canDivide,
+    wantDivide,
     Dead
 }
