@@ -9,20 +9,24 @@ public class Program {
     static int nutritions=10;
     static Object nutritionLock = new Object();
     static StopWatch stopWatch = new StopWatch();
+    static ConcurrentLinkedQueue<Cell> cells;
+    static ConcurrentLinkedQueue<Cell> sCellToDivide;
+    static ArrayList<Thread> threadList;
 
     public static void main (String[] args)
     {
-        ConcurrentLinkedQueue<Cell> cells = new ConcurrentLinkedQueue<Cell>();
+        sCellToDivide = new ConcurrentLinkedQueue<Cell>();
+        cells = new ConcurrentLinkedQueue<Cell>();
         for (int i = 0; i < 3; i++) {
             cells.add(new SexualCell());
             cells.add(new AsexualCell());
         }
-        ArrayList<Thread> threadList = new ArrayList<>();
+        threadList = new ArrayList<>();
         for (Cell c : cells)
         {
             threadList.add(new Thread(){public void run(){ c.Live(); } });
         }
-        threadList.add(new Thread(){public void run()
+        Thread consWriterThread = new Thread(){public void run()
         {
             stopWatch.start();
             write("Time: "+stopWatch.elapsedTime(),true);
@@ -33,11 +37,12 @@ public class Program {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        } });
+        } };
         for (Thread t:threadList)
         {
             t.start();
         }
+        consWriterThread.start();
         stopWatch.stop();
     }
 
