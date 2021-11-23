@@ -4,9 +4,9 @@ public class AsexualCell extends Cell{
     {
         id="A"+nr.incrementAndGet();
     }
-    public AsexualCell(String s)
+    public AsexualCell(String parent)
     {
-        id=s+"-"+nr.incrementAndGet();
+        id=parent+"-"+nr.incrementAndGet();
     }
 
     @Override

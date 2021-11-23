@@ -11,7 +11,7 @@ public class SexualCell extends Cell{
 
     public SexualCell(String parent)
     {
-        id="S"+nr.incrementAndGet();
+        id=parent+"-"+nr.incrementAndGet();
         state=cellState.Hungry;
     }
 
