@@ -28,14 +28,24 @@ public class Program {
         }
         Thread consWriterThread = new Thread(){public void run()
         {
-            stopWatch.start();
-            write("Time: "+stopWatch.elapsedTime(),true);
-            write("\nCells",false);
-            for (Cell c: cells){write(c.toString()+"                         ",false);}
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            boolean needed=true;
+            while(needed)
+            {
+                stopWatch.start();
+                write("Time: "+stopWatch.elapsedTime(),true);
+                write("\nCells",false);
+                for (Cell c: cells){write(c.toString()+"                         ",false);}
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                needed=false;
+                for (Thread t:threadList)
+                {
+                    if(t.isAlive())
+                        needed=true;
+                }
             }
         } };
         for (Thread t:threadList)
