@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class SexualCell extends Cell{
 
     public SexualCell()
@@ -12,11 +14,19 @@ public class SexualCell extends Cell{
     }
 
     @Override
-    public boolean CanDivide() {//TODO find pair
-        if (nrOfEat>=10)
+    public boolean CanDivide() {
+        boolean b=false;
+        if (Program.sCellToDivide.isEmpty())
         {
-            return true;
+            for(Cell c:Program.cells) //TODO: can be optimized
+            {
+                b=((c instanceof SexualCell) && (c.state!=cellState.Dead));
+            }
         }
-        return false;
+        else
+        {
+            b=true;
+        }
+        return ((nrOfEat>=10)&& b);
     }
 }
