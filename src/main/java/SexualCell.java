@@ -26,7 +26,7 @@ public class SexualCell extends Cell{
         {
             notify();
             Divided();
-            SexualCell babyCell = new SexualCell();
+            SexualCell babyCell = new SexualCell(this.id);
             Program.cells.add(babyCell);
             Thread babyThread = new Thread(){public void run(){ babyCell.Live(); } };
             Program.threadList.add(babyThread);
@@ -52,7 +52,7 @@ public class SexualCell extends Cell{
                     e.printStackTrace();
                 }
             }
-            else
+            else //no more sexual cells
             {
                 state=cellState.Ok;
             }
