@@ -31,7 +31,7 @@ public class Program {
             {
                 long time = System.currentTimeMillis()-startTime;
                 write("Time: "+time,true);
-                write("\nCells",false);
+                write("\nCells:",false);
                 for (Cell c: cells){write(c.toString()+"                         ",false);}
                 try {
                     sleep(1000);
