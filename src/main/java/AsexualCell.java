@@ -9,6 +9,11 @@ public class AsexualCell extends Cell{
     protected void Divide() {
         nrOfEat=0;
         state=cellState.Ok;
+        BabyCell();
+        BabyCell();
+    }
+
+    private void BabyCell() {
         AsexualCell babyCell = new AsexualCell();
         Program.cells.add(babyCell);
         Thread babyThread = new Thread(){public void run(){ babyCell.Live(); } };
