@@ -4,20 +4,20 @@ import static java.lang.Thread.sleep;
 
 @SuppressWarnings("BusyWait")
 public abstract class Cell {
-    static AtomicInteger nr= new AtomicInteger(0);
-    String id;
-    cellState state = cellState.Ok;
-    final int T_full=5;
-    final int T_starve=2;
+    protected static AtomicInteger nr= new AtomicInteger(0);
+    protected String id;
+    protected cellState state = cellState.Ok;
+    protected final int T_full=5;
+    protected final int T_starve=2;
     //int timeToHungry=T_full;
     //int timeToDie=timeToHungry+T_starve;
-    int nrOfEat=0;
+    protected int nrOfEat=0;
 
-    protected abstract void Divide();
-    protected boolean CanDivide(){
+    protected abstract void divide();
+    protected boolean canDivide(){
         return nrOfEat >= 10;
     }
-    public void Live()
+    public void live()
     {
         while (state!=cellState.Dead)
         {
@@ -26,6 +26,7 @@ public abstract class Cell {
                 case Ok -> {
                     try {
                         sleep(T_full*1000);
+                        state=cellState.Hungry;
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -35,7 +36,7 @@ public abstract class Cell {
                     int t=T_starve;
                     while ((state==cellState.Hungry)&&(t>0))
                     {
-                        Starve();
+                        starve();
                         try {
                             sleep(1000);
                         } catch (InterruptedException e) {
@@ -45,20 +46,20 @@ public abstract class Cell {
                     }
                     if(t==0)
                     {
-                        Die();
+                        die();
                         nrOfEat=-1;
                     }
                     break;
                 }
-                case wantDivide -> {
-                    Divide();
+                case WantDivide -> {
+                    divide();
                     break;
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + state);
             }
         }
     }
-    protected void Die()
+    protected void die()
     {
         state=cellState.Dead;
         int food = Program.random.nextInt(1,6);
@@ -67,7 +68,7 @@ public abstract class Cell {
             Program.nutritions+=food;
         }
     }
-    protected void Starve()
+    protected void starve()
     {
         if(canEat())
         {
@@ -77,7 +78,7 @@ public abstract class Cell {
             state=cellState.Ok;
         }
         if (nrOfEat==10)
-            state=cellState.wantDivide;
+            state=cellState.WantDivide;
     }
     private boolean canEat()
     {

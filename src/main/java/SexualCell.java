@@ -1,6 +1,3 @@
-import java.awt.*;
-import java.util.ArrayList;
-
 public class SexualCell extends Cell{
 
     public SexualCell()
@@ -15,20 +12,20 @@ public class SexualCell extends Cell{
         state=cellState.Hungry;
     }
 
-    public String getId()
+    /*public String getId()
     {
         return id;
-    }
+    }*/
 
     @Override
-    public synchronized void Divide() {
-        if (CanDivide())
+    public synchronized void divide() {
+        if (canDivide())
         {
             notify();
-            Divided();
+            divided();
             SexualCell babyCell = new SexualCell(this.id);
             Program.cells.add(babyCell);
-            Thread babyThread = new Thread(){public void run(){ babyCell.Live(); } };
+            Thread babyThread = new Thread(){public void run(){ babyCell.live(); } };
             Program.threadList.add(babyThread);
             babyThread.start();
         }
@@ -47,7 +44,7 @@ public class SexualCell extends Cell{
                 Program.sCellToDivide.add(this);
                 try {
                     wait();
-                    Divided();
+                    divided();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -60,7 +57,7 @@ public class SexualCell extends Cell{
         }
     }
 
-    private void Divided()
+    private void divided()
     {
         Program.sCellToDivide.remove(this);
         nrOfEat=0;
@@ -68,7 +65,7 @@ public class SexualCell extends Cell{
     }
 
     @Override
-    public boolean CanDivide() {
+    public boolean canDivide() {
         Program.sCellToDivide.remove(this); //try if contains
         return ((nrOfEat>=10)&& !Program.sCellToDivide.isEmpty());
     }

@@ -10,17 +10,17 @@ public class AsexualCell extends Cell{
     }
 
     @Override
-    protected void Divide() {
+    protected void divide() {
         nrOfEat=0;
         state=cellState.Ok;
-        BabyCell();
-        BabyCell();
+        babyCell();
+        babyCell();
     }
 
-    private void BabyCell() {
+    private void babyCell() {
         AsexualCell babyCell = new AsexualCell(this.id);
         Program.cells.add(babyCell);
-        Thread babyThread = new Thread(){public void run(){ babyCell.Live(); } };
+        Thread babyThread = new Thread(){public void run(){ babyCell.live(); } };
         Program.threadList.add(babyThread);
         babyThread.start();
     }

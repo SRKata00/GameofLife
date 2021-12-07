@@ -22,7 +22,7 @@ public class Program {
         threadList = new ArrayList<>();
         for (Cell c : cells)
         {
-            threadList.add(new Thread(){public void run(){ c.Live(); } });
+            threadList.add(new Thread(){public void run(){ c.live(); } });
         }
         Thread consWriterThread = new Thread(){public void run()
         {
@@ -30,9 +30,10 @@ public class Program {
             while(needed)
             {
                 long time = System.currentTimeMillis()-startTime;
-                write("Time: "+time,true);
-                write("\nCells:",false);
-                for (Cell c: cells){write(c.toString()+"                         ",false);}
+                write("Time: "+time/1000);
+                write("Number of nutritions: "+nutritions);
+                write("\nCells:");
+                for (Cell c: cells){write(c.toString());}
                 try {
                     sleep(1000);
                 } catch (InterruptedException e) {
@@ -54,14 +55,8 @@ public class Program {
         //stopWatch.stop();
     }
 
-    public static synchronized void write(String text, boolean b)
+    public static synchronized void write(String text)
     {
-        if(b) {
-            char escCode=0x18;
-            int row=0;
-            int column =0;
-            System.out.print(String.format("%c[%d;%df]", escCode, row,column));
-        }
         System.out.println(text);
     }
 }
