@@ -3,8 +3,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Program {
-    static ThreadLocalRandom random;
-    static int nutritions=10;
+    //static ThreadLocalRandom random=new ThreadLocalRandom();
+    static int nutritions=1;
     static Object nutritionLock = new Object();
     static long startTime = System.currentTimeMillis();
     static ConcurrentLinkedQueue<Cell> cells;
@@ -29,11 +29,7 @@ public class Program {
             boolean needed=true;
             while(needed)
             {
-                long time = System.currentTimeMillis()-startTime;
-                write("Time: "+time/1000);
-                write("Number of nutritions: "+nutritions);
-                write("\nCells:");
-                for (Cell c: cells){write(c.toString());}
+                writeState();
                 try {
                     sleep(1000);
                 } catch (InterruptedException e) {
@@ -55,6 +51,13 @@ public class Program {
         //stopWatch.stop();
     }
 
+    private static void writeState()
+    {long time = System.currentTimeMillis()-startTime;
+        write("\nTime: "+time/1000);
+        write("Number of nutritions: "+nutritions);
+        write("Cells:");
+        for (Cell c: cells){write(c.toString());}
+    }
     public static synchronized void write(String text)
     {
         System.out.println(text);

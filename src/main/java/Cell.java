@@ -1,3 +1,4 @@
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Thread.sleep;
@@ -62,7 +63,7 @@ public abstract class Cell {
     protected void die()
     {
         state=cellState.Dead;
-        int food = Program.random.nextInt(1,6);
+        int food = ThreadLocalRandom.current().nextInt(1,6);
         synchronized (Program.nutritionLock)
         {
             Program.nutritions+=food;
