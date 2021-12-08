@@ -1,3 +1,5 @@
+import java.util.concurrent.ThreadLocalRandom;
+
 public class SexualCell extends Cell{
 
     public Object divideLock = new Object();
@@ -84,5 +86,37 @@ public class SexualCell extends Cell{
             }
         }
         return (pair!=null);
+    }
+
+    @Override
+    protected void die() {
+        state = cellState.Dead;
+        int food = ThreadLocalRandom.current().nextInt(1, 6);
+        synchronized (Program.nutritionLock) {
+            Program.nutritions += food;
+        }
+        Program.cells.remove(this);
+        synchronized (Program.deadCells) {
+            Program.deadCells += "  " + id;
+        }
+        synchronized (Program.divideLock) { //to avoid deadlock, notify the waiting cell at the dead of last cell
+            if (!Program.sCellToDivide.isEmpty())
+            {
+                int i=0;
+                for (Cell c: Program.cells) {
+                    if(c instanceof SexualCell)
+                        i++;
+                }
+                if(i==0)
+                {
+                    SexualCell c = Program.sCellToDivide.remove();
+                    synchronized (c.divideLock)
+                    {
+                        c.divideLock.notify();
+                    }
+                }
+
+            }
+        }
     }
 }
