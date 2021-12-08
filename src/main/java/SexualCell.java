@@ -21,7 +21,7 @@ public class SexualCell extends Cell{
     public synchronized void divide() {
         if (canDivide())
         {
-            notify();
+            Program.sCellToDivide.notify();
             divided();
             SexualCell babyCell = new SexualCell(this.id);
             Program.cells.add(babyCell);
@@ -67,6 +67,6 @@ public class SexualCell extends Cell{
     @Override
     public boolean canDivide() {
         Program.sCellToDivide.remove(this); //try if contains
-        return ((nrOfEat>=10)&& !Program.sCellToDivide.isEmpty());
+        return ((nrOfEat>=T_divide)&& !Program.sCellToDivide.isEmpty());
     }
 }

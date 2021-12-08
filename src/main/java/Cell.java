@@ -10,13 +10,14 @@ public abstract class Cell {
     protected cellState state = cellState.Ok;
     protected final int T_full=5;
     protected final int T_starve=2;
+    protected final int T_divide=3;//10
     //int timeToHungry=T_full;
     //int timeToDie=timeToHungry+T_starve;
     protected int nrOfEat=0;
 
     protected abstract void divide();
     protected boolean canDivide(){
-        return nrOfEat >= 10;
+        return nrOfEat >= T_divide;
     }
     public void live()
     {
@@ -78,7 +79,7 @@ public abstract class Cell {
             //timeToDie=timeToHungry+T_starve;
             state=cellState.Ok;
         }
-        if (nrOfEat==10)
+        if (nrOfEat==T_divide)
             state=cellState.WantDivide;
     }
     private boolean canEat()

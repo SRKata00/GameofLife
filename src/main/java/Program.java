@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Program {
     //static ThreadLocalRandom random=new ThreadLocalRandom();
-    static int nutritions=1;
+    static int nutritions=29;
     static Object nutritionLock = new Object();
     static long startTime = System.currentTimeMillis();
     static ConcurrentLinkedQueue<Cell> cells;
@@ -17,7 +17,7 @@ public class Program {
         cells = new ConcurrentLinkedQueue<Cell>();
         for (int i = 0; i < 3; i++) {
             cells.add(new SexualCell());
-            cells.add(new AsexualCell());
+            //cells.add(new AsexualCell());
         }
         threadList = new ArrayList<>();
         for (Cell c : cells)
@@ -55,6 +55,7 @@ public class Program {
     {long time = System.currentTimeMillis()-startTime;
         write("\nTime: "+time/1000);
         write("Number of nutritions: "+nutritions);
+        write("Cell to divide:" + sCellToDivide.stream().count());
         write("Cells:");
         for (Cell c: cells){write(c.toString());}
     }
