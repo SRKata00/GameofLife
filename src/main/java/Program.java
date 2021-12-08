@@ -4,12 +4,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Program {
     //static ThreadLocalRandom random=new ThreadLocalRandom();
-    static int nutritions=10;
+    static int nutritions=45;
     static Object nutritionLock = new Object();
     static long startTime = System.currentTimeMillis();
     static ConcurrentLinkedQueue<Cell> cells;
     static String deadCells = "";
-    static ConcurrentLinkedQueue<SexualCell> sCellToDivide;
+    static ConcurrentLinkedQueue<SexualCell> sCellToDivide; //dont need queue
     static Object divideLock = new Object();
     static ArrayList<Thread> threadList;
 

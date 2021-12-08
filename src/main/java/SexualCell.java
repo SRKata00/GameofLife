@@ -11,12 +11,14 @@ public class SexualCell extends Cell{
 
     public SexualCell(String parent)
     {
+        //initial infometata.
         id=parent+"-"+nr.incrementAndGet();
         state=cellState.Hungry;
     }
 
     @Override
     public synchronized void divide() {
+        //Dupa ce a mincat de minim 10 ori, o celula se va inmulti inainte sa i se faca din nou foame.
             if (canDivide()) { //another cell is ready to divide and waits for pair
                 String babyid=id;
                 while(pair!=null)

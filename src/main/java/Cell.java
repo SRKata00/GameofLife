@@ -10,7 +10,7 @@ public abstract class Cell {
     protected cellState state = cellState.Ok;
     protected final int T_full=5;
     protected final int T_starve=2;
-    protected final int T_divide=3;//10
+    protected final int T_divide=10;//10
     protected int nrOfEat=0;
 
     protected abstract void divide();
