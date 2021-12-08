@@ -47,7 +47,6 @@ public abstract class Cell {
                     if(t==0)
                     {
                         die();
-                        nrOfEat=-1;
                     }
                     break;
                 }
@@ -59,13 +58,15 @@ public abstract class Cell {
             }
         }
     }
-    protected void die()
-    {
-        state=cellState.Dead;
-        int food = ThreadLocalRandom.current().nextInt(1,6);
-        synchronized (Program.nutritionLock)
-        {
-            Program.nutritions+=food;
+    protected void die() {
+        state = cellState.Dead;
+        int food = ThreadLocalRandom.current().nextInt(1, 6);
+        synchronized (Program.nutritionLock) {
+            Program.nutritions += food;
+        }
+        Program.cells.remove(this);
+        synchronized (Program.deadCells) {
+            Program.deadCells += "  " + id;
         }
     }
     protected void starve()

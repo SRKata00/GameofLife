@@ -4,10 +4,11 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Program {
     //static ThreadLocalRandom random=new ThreadLocalRandom();
-    static int nutritions=29;
+    static int nutritions=10;
     static Object nutritionLock = new Object();
     static long startTime = System.currentTimeMillis();
     static ConcurrentLinkedQueue<Cell> cells;
+    static String deadCells = "";
     static ConcurrentLinkedQueue<SexualCell> sCellToDivide;
     static Object divideLock = new Object();
     static ArrayList<Thread> threadList;
@@ -43,20 +44,20 @@ public class Program {
                         needed=true;
                 }
             }
+            writeState();
         } };
         for (Thread t:threadList)
         {
             t.start();
         }
         consWriterThread.start();
-        //stopWatch.stop();
     }
 
     private static void writeState()
     {long time = System.currentTimeMillis()-startTime;
         write("\nTime: "+time/1000);
         write("Number of nutritions: "+nutritions);
-        write("Cell to divide:" + sCellToDivide.stream().count());
+        write("Dead cells: " + deadCells);
         write("Cells:");
         for (Cell c: cells){write(c.toString());}
     }
