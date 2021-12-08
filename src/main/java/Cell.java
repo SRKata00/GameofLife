@@ -11,8 +11,6 @@ public abstract class Cell {
     protected final int T_full=5;
     protected final int T_starve=2;
     protected final int T_divide=3;//10
-    //int timeToHungry=T_full;
-    //int timeToDie=timeToHungry+T_starve;
     protected int nrOfEat=0;
 
     protected abstract void divide();
@@ -75,14 +73,14 @@ public abstract class Cell {
         if(canEat())
         {
             nrOfEat++;
-            //timeToHungry=T_full;
-            //timeToDie=timeToHungry+T_starve;
             state=cellState.Ok;
         }
         if (nrOfEat==T_divide)
+        {
             state=cellState.WantDivide;
+        }
     }
-    private boolean canEat()
+    protected boolean canEat()
     {
         synchronized (Program.nutritionLock)
         {

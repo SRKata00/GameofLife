@@ -8,15 +8,15 @@ public class Program {
     static Object nutritionLock = new Object();
     static long startTime = System.currentTimeMillis();
     static ConcurrentLinkedQueue<Cell> cells;
-    static ConcurrentLinkedQueue<Cell> sCellToDivide;
+    static ConcurrentLinkedQueue<SexualCell> sCellToDivide;
     static Object divideLock = new Object();
     static ArrayList<Thread> threadList;
 
     public static void main (String[] args)
     {
-        sCellToDivide = new ConcurrentLinkedQueue<Cell>();
+        sCellToDivide = new ConcurrentLinkedQueue<SexualCell>();
         cells = new ConcurrentLinkedQueue<Cell>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             cells.add(new SexualCell());
             cells.add(new AsexualCell());
         }

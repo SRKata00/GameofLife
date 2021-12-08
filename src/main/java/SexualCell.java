@@ -1,5 +1,8 @@
 public class SexualCell extends Cell{
 
+    public Object divideLock = new Object();
+    private SexualCell pair=null;
+
     public SexualCell()
     {
         id="S"+nr.incrementAndGet();
@@ -12,19 +15,21 @@ public class SexualCell extends Cell{
         state=cellState.Hungry;
     }
 
-    /*public String getId()
-    {
-        return id;
-    }*/
-
     @Override
     public synchronized void divide() {
-        synchronized (Program.divideLock) {
-            if (canDivide()) {
-                Program.divideLock.notify();
+            if (canDivide()) { //another cell is ready to divide and waits for pair
+                String babyid=id;
+                while(pair!=null)
+                {
+                    synchronized (pair.divideLock) {
+                        pair.divideLock.notify();
+                    }
+                    babyid+="+"+pair.id;
+                    pair = null;
+                }
 
                 divided();
-                SexualCell babyCell = new SexualCell(this.id);
+                SexualCell babyCell = new SexualCell(babyid);
                 Program.cells.add(babyCell);
                 Thread babyThread = new Thread() {
                     public void run() {
@@ -33,18 +38,19 @@ public class SexualCell extends Cell{
                 };
                 Program.threadList.add(babyThread);
                 babyThread.start();
-            } else {
+            } else { // check if there is another sexual cell
                 boolean b = false;
-                for (Cell c : Program.cells) //TODO: can be optimized
+                for (Cell c : Program.cells) //can be optimized
                 {
                     if ((c != this) && (c instanceof SexualCell) && (c.state != cellState.Dead)) {
                         b = true;
                     }
                 }
                 if (b) {
-                    Program.sCellToDivide.add(this);
                     try {
-                        Program.divideLock.wait();
+                        synchronized (divideLock) {
+                            divideLock.wait();
+                        }
                         divided();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -53,21 +59,28 @@ public class SexualCell extends Cell{
                 {
                     state = cellState.Ok;
                 }
-
             }
-        }
     }
 
     private void divided()
     {
-        Program.sCellToDivide.remove(this);
         nrOfEat=0;
         state=cellState.Ok;
     }
 
     @Override
-    public boolean canDivide() {
-        Program.sCellToDivide.remove(this); //try if contains
-        return ((nrOfEat>=T_divide)&& !Program.sCellToDivide.isEmpty());
+    protected boolean canDivide() {
+        synchronized (Program.divideLock) {
+            if ((nrOfEat >= T_divide) && !Program.sCellToDivide.isEmpty())
+            {
+                pair=Program.sCellToDivide.remove();
+            }
+            else
+            {
+                pair=null;
+                Program.sCellToDivide.add(this);
+            }
+        }
+        return (pair!=null);
     }
 }
