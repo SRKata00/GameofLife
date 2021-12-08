@@ -19,41 +19,42 @@ public class SexualCell extends Cell{
 
     @Override
     public synchronized void divide() {
-        if (canDivide())
-        {
-            Program.sCellToDivide.notify();
-            divided();
-            SexualCell babyCell = new SexualCell(this.id);
-            Program.cells.add(babyCell);
-            Thread babyThread = new Thread(){public void run(){ babyCell.live(); } };
-            Program.threadList.add(babyThread);
-            babyThread.start();
-        }
-        else
-        {
-            boolean b=false;
-            for(Cell c:Program.cells) //TODO: can be optimized
-            {
-                if ((c!=this)&&(c instanceof SexualCell) && (c.state!=cellState.Dead))
-                {
-                    b=true;
-                }
-            }
-            if(b)
-            {
-                Program.sCellToDivide.add(this);
-                try {
-                    wait();
-                    divided();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            else //no more sexual cells
-            {
-                state=cellState.Ok;
-            }
+        synchronized (Program.divideLock) {
+            if (canDivide()) {
+                Program.divideLock.notify();
 
+                divided();
+                SexualCell babyCell = new SexualCell(this.id);
+                Program.cells.add(babyCell);
+                Thread babyThread = new Thread() {
+                    public void run() {
+                        babyCell.live();
+                    }
+                };
+                Program.threadList.add(babyThread);
+                babyThread.start();
+            } else {
+                boolean b = false;
+                for (Cell c : Program.cells) //TODO: can be optimized
+                {
+                    if ((c != this) && (c instanceof SexualCell) && (c.state != cellState.Dead)) {
+                        b = true;
+                    }
+                }
+                if (b) {
+                    Program.sCellToDivide.add(this);
+                    try {
+                        Program.divideLock.wait();
+                        divided();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else //no more sexual cells
+                {
+                    state = cellState.Ok;
+                }
+
+            }
         }
     }
 

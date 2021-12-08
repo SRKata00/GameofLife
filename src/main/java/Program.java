@@ -9,6 +9,7 @@ public class Program {
     static long startTime = System.currentTimeMillis();
     static ConcurrentLinkedQueue<Cell> cells;
     static ConcurrentLinkedQueue<Cell> sCellToDivide;
+    static Object divideLock = new Object();
     static ArrayList<Thread> threadList;
 
     public static void main (String[] args)
@@ -17,7 +18,7 @@ public class Program {
         cells = new ConcurrentLinkedQueue<Cell>();
         for (int i = 0; i < 3; i++) {
             cells.add(new SexualCell());
-            //cells.add(new AsexualCell());
+            cells.add(new AsexualCell());
         }
         threadList = new ArrayList<>();
         for (Cell c : cells)
